@@ -56,9 +56,10 @@ namespace JsonStatsCollector
         {
             TextBox newNameTextBox = new TextBox
             {
-                Style = (Style)FindResource("ModernTextBox"),
+                Style = (Style)FindResource("DarkTextBoxStyle"),
                 Margin = new Thickness(0, 5, 0, 0)
             };
+    
             newNameTextBox.TextChanged += (s, args) =>
             {
                 string name = newNameTextBox.Text.Trim();
@@ -194,9 +195,10 @@ namespace JsonStatsCollector
             );
             
             Top10Stats = _wordFrequency
+                .Where(kvp => kvp.Key.Length >= 5 && kvp.Key.All(char.IsLetter))
                 .Select(kvp => new ChartData(kvp.Key, kvp.Value))
                 .OrderByDescending(data => data.Value)
-                .Take(10)
+                .Take(50)
                 .ToList();
             Top10ListView.ItemsSource = Top10Stats;
 

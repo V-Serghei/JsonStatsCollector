@@ -8,12 +8,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6006568a-dcf8-4ddb-9260-e3b9d5711fdf" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/JsonStatsCollector/Core/IJsonProcessor.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/JsonStatsCollector/Core/JsonProcessor.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/JsonStatsCollector/Entity/ChartData.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/JsonStatsCollector/Entity/MessageItem.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/JsonStatsCollector/Entity/TelegramMessage.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/JsonStatsCollector/Entity/TextEntity.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.JsonStatsCollector/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.JsonStatsCollector/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/JsonStatsCollector/JsonStatsCollector.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/JsonStatsCollector/JsonStatsCollector.csproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/JsonStatsCollector/MainWindow.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/JsonStatsCollector/MainWindow.xaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/JsonStatsCollector/MainWindow.xaml.cs" beforeDir="false" afterPath="$PROJECT_DIR$/JsonStatsCollector/MainWindow.xaml.cs" afterDir="false" />
@@ -104,7 +99,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1754070573595</updated>
-      <workItem from="1754070573597" duration="13738000" />
+      <workItem from="1754070573597" duration="16577000" />
     </task>
     <task id="LOCAL-00001" summary="initialize new WPF application structure with essential files">
       <option name="closed" value="true" />
@@ -114,7 +109,15 @@
       <option name="project" value="LOCAL" />
       <updated>1754070754214</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="add core functionality for JSON processing and UI integration">
+      <option name="closed" value="true" />
+      <created>1754084924737</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1754084924737</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -125,7 +128,8 @@
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
     <MESSAGE value="initialize new WPF application structure with essential files" />
-    <option name="LAST_COMMIT_MESSAGE" value="initialize new WPF application structure with essential files" />
+    <MESSAGE value="add core functionality for JSON processing and UI integration" />
+    <option name="LAST_COMMIT_MESSAGE" value="add core functionality for JSON processing and UI integration" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
