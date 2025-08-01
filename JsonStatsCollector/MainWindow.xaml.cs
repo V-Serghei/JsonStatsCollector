@@ -1,23 +1,226 @@
-﻿using System.Text;
+﻿using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using JsonStatsCollector.Core;
+using Microsoft.Win32;
+using LiveCharts;
+using LiveCharts.Wpf;
 
-namespace JsonStatsCollector;
-
-/// <summary>
-/// Interaction logic for MainWindow.xaml
-/// </summary>
-public partial class MainWindow : Window
+namespace JsonStatsCollector
 {
-    public MainWindow()
+    public partial class MainWindow : Window
     {
-        InitializeComponent();
+        private List<string> _names = new List<string>();
+        private Dictionary<string, int>  _wordFrequency = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+        private Dictionary<string, int>  _wordFrequency1 = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+
+        private List<ChartData> StatisticsMessagesCount { get; set; } = new List<ChartData>();
+        private List<ChartData> StatisticsWordsCount { get; set; } = new List<ChartData>();
+        private List<ChartData> StatisticsLettersCount { get; set; } = new List<ChartData>();
+        
+        public List<ChartData> Top10Stats { get; set; } = new();
+        public SeriesCollection  StatisticsMessages { get; set; }
+        public SeriesCollection  StatisticsWords { get; set; }
+        public SeriesCollection StatisticsLetters { get; set; }
+        private string _jsonFilePath = string.Empty;
+        private JsonProcessor _jsonProcessor = new JsonProcessor();
+
+        
+
+        public MainWindow()
+        {
+            InitializeComponent();
+            DataContext = this;
+            
+            StatisticsMessages = new SeriesCollection();
+            StatisticsWords = new SeriesCollection();
+            StatisticsLetters = new SeriesCollection();
+        }
+
+        private void BrowseButton_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                Filter = "JSON files (*.json)|*.json|All files (*.*)|*.*"
+            };
+
+            if (openFileDialog.ShowDialog() == true)
+            {
+                FilePathTextBox.Text = openFileDialog.FileName;
+                _jsonFilePath = openFileDialog.FileName;
+                
+            }
+        }
+
+        private void AddNameButton_Click(object sender, RoutedEventArgs e)
+        {
+            TextBox newNameTextBox = new TextBox
+            {
+                Style = (Style)FindResource("ModernTextBox"),
+                Margin = new Thickness(0, 5, 0, 0)
+            };
+            newNameTextBox.TextChanged += (s, args) =>
+            {
+                string name = newNameTextBox.Text.Trim();
+                if (!string.IsNullOrEmpty(name) && !_names.Contains(name))
+                {
+                    _names.Add(name);
+                }
+            };
+            NamesPanel.Children.Add(newNameTextBox);
+        }
+
+        private void AnalyzeButton_Click(object sender, RoutedEventArgs e)
+        {
+            StatisticsWordsCount.Clear();
+            StatisticsWords.Clear();
+            StatisticsLettersCount.Clear();
+            StatisticsLetters.Clear();
+            StatisticsMessagesCount.Clear();
+            StatisticsMessages.Clear();
+            _wordFrequency1.Clear();
+            _wordFrequency.Clear();
+            
+            
+            var listOfMessage = _jsonProcessor.LoadJsonFile(_jsonFilePath);
+            if (listOfMessage.Count == 0)
+            {
+                MessageBox.Show("No messages found in the JSON file.", "Error", MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+                return;
+            }
+
+            var stopwatch1 = Stopwatch.StartNew();
+
+            var groupedMessages = listOfMessage
+                .GroupBy(m => m.From)
+                .ToList();
+
+            StatisticsWordsCount = groupedMessages
+                .Select(g => new ChartData(
+                    g.Key,
+                    g.Sum(m => m.Text.Split(new[] { ' ', '\t', '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries).Length)
+                ))
+                .ToList();
+
+            StatisticsLettersCount = groupedMessages
+                .Select(g => new ChartData(
+                    g.Key,
+                    g.Sum(m => m.Text.Count(c => char.IsLetter(c)))
+                ))
+                .ToList();
+
+            StatisticsMessagesCount = groupedMessages.
+                Select(g => new ChartData(g.Key, g.Count()))
+                .ToList();
+
+            _wordFrequency1 = groupedMessages
+                .SelectMany(group => group)
+                .SelectMany(message => message.Text.
+                    Split(new[] { ' ', '\t', '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries))
+                .GroupBy(word => word, StringComparer.OrdinalIgnoreCase)
+                .OrderByDescending(g => g.Count())
+                .Take(10)
+                .ToDictionary(g => g.Key, g => g.Count());
+
+            stopwatch1.Stop();
+            Console.WriteLine($"Время обработки способ1: {stopwatch1.ElapsedMilliseconds} мс");
+            
+            var stopwatch = Stopwatch.StartNew();
+
+            var aggregatedStats = listOfMessage
+                .GroupBy(m => m.From)
+                .Select(g =>
+                {
+                    int messageCount = 0;
+                    int wordCount = 0;
+                    int letterCount = 0;
+
+                    foreach (var msg in g)
+                    {
+                        messageCount++;
+                        letterCount += msg.Text.Count(c => char.IsLetter(c));
+
+                        var words = msg.Text.Split(new[] { ' ', '\t', '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
+                        wordCount += words.Length;
+
+                        foreach (var word in words)
+                        {
+                            _wordFrequency.TryGetValue(word, out int currentCount);
+                            _wordFrequency[word] = currentCount + 1;
+                        }
+                    }
+
+                    return new
+                    {
+                        From = g.Key,
+                        Messages = messageCount,
+                        Words = wordCount,
+                        Letters = letterCount
+                    };
+                })
+                .ToList();
+
+            var top10Words = _wordFrequency
+                .OrderByDescending(kvp => kvp.Value)
+                .Take(10)
+                .ToDictionary(kvp => kvp.Key, kvp => kvp.Value).ToList();
+
+
+            StatisticsMessagesCount = aggregatedStats
+                .Select(s => new ChartData(s.From, s.Messages))
+                .ToList();
+
+            StatisticsWordsCount = aggregatedStats
+                .Select(s => new ChartData(s.From, s.Words))
+                .ToList();
+
+            StatisticsLettersCount = aggregatedStats
+                .Select(s => new ChartData(s.From, s.Letters))
+                .ToList();
+            stopwatch.Stop();
+            Console.WriteLine($"Время обработки2: {stopwatch.ElapsedMilliseconds} мс");
+            
+
+
+            StatisticsMessages.AddRange(
+                StatisticsMessagesCount
+                    .Where(data => _names.Contains(data.Name))
+                    .Select(data => new PieSeries {
+                        Title = data.Name,
+                        Values = new ChartValues<int> { data.Value },
+                        DataLabels = true
+                    })
+            );
+            
+            Top10Stats = _wordFrequency
+                .Select(kvp => new ChartData(kvp.Key, kvp.Value))
+                .OrderByDescending(data => data.Value)
+                .Take(10)
+                .ToList();
+            Top10ListView.ItemsSource = Top10Stats;
+
+            
+            StatisticsWords.AddRange(
+                StatisticsWordsCount
+                    .Where(data => _names.Contains(data.Name))
+                    .Select(data => new PieSeries {
+                        Title = data.Name,
+                        Values = new ChartValues<int> { data.Value },
+                        DataLabels = true
+                    })
+            );
+
+            StatisticsLetters.AddRange(
+                StatisticsLettersCount
+                    .Where(data => _names.Contains(data.Name))
+                    .Select(data => new PieSeries {
+                        Title = data.Name,
+                        Values = new ChartValues<int> { data.Value },
+                        DataLabels = true
+                    })
+            );
+            
+        }
     }
 }
