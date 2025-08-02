@@ -8,8 +8,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6006568a-dcf8-4ddb-9260-e3b9d5711fdf" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/JsonStatsCollector/Entity/Chat.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/JsonStatsCollector/Entity/ChatContainer.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/JsonStatsCollector/Entity/Message.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/JsonStatsCollector/Entity/RootObject.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.JsonStatsCollector/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.JsonStatsCollector/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JsonStatsCollector/JsonStatsCollector.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/JsonStatsCollector/JsonStatsCollector.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JsonStatsCollector/Core/IJsonProcessor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/JsonStatsCollector/Core/IJsonProcessor.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JsonStatsCollector/Core/JsonProcessor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/JsonStatsCollector/Core/JsonProcessor.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/JsonStatsCollector/MainWindow.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/JsonStatsCollector/MainWindow.xaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/JsonStatsCollector/MainWindow.xaml.cs" beforeDir="false" afterPath="$PROJECT_DIR$/JsonStatsCollector/MainWindow.xaml.cs" afterDir="false" />
     </list>
@@ -24,25 +29,25 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "V-Serghei"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;V-Serghei&quot;
   }
-}]]></component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/V-Serghei/JsonStatsCollector.git",
-    "accountId": "7af013f7-f18a-45de-8638-80607ad39192"
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/V-Serghei/JsonStatsCollector.git&quot;,
+    &quot;accountId&quot;: &quot;7af013f7-f18a-45de-8638-80607ad39192&quot;
   }
-}]]></component>
+}</component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/6ba4aaa2780646e5ada7d20877c43f4f1b6930/da/4d1f7fec/ThrowHelper.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 5
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 5
+}</component>
   <component name="ProjectId" id="30hClcSP7CBDL7zlNt8Ruf9Ztyf" />
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Add" />
@@ -64,6 +69,7 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.keymap",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -99,7 +105,8 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1754070573595</updated>
-      <workItem from="1754070573597" duration="16577000" />
+      <workItem from="1754070573597" duration="17163000" />
+      <workItem from="1754145748984" duration="7298000" />
     </task>
     <task id="LOCAL-00001" summary="initialize new WPF application structure with essential files">
       <option name="closed" value="true" />
@@ -117,7 +124,15 @@
       <option name="project" value="LOCAL" />
       <updated>1754084924737</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="update project to target .NET 8.0 and enhance UI styles for improved user experience">
+      <option name="closed" value="true" />
+      <created>1754087718098</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1754087718098</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -129,7 +144,8 @@
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
     <MESSAGE value="initialize new WPF application structure with essential files" />
     <MESSAGE value="add core functionality for JSON processing and UI integration" />
-    <option name="LAST_COMMIT_MESSAGE" value="add core functionality for JSON processing and UI integration" />
+    <MESSAGE value="update project to target .NET 8.0 and enhance UI styles for improved user experience" />
+    <option name="LAST_COMMIT_MESSAGE" value="update project to target .NET 8.0 and enhance UI styles for improved user experience" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -146,6 +162,45 @@
           <properties exception="System.Threading.ThreadAbortException" breakIfHandledByOtherCode="false" displayValue="System.Threading.ThreadAbortException" />
           <option name="timeStamp" value="3" />
         </breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/JsonStatsCollector/Core/JsonProcessor.cs</url>
+          <line>82</line>
+          <properties documentPath="C:\Users\visto\RiderProjects\JsonStatsCollector\JsonStatsCollector\Core\JsonProcessor.cs" containingFunctionPresentation="Method 'LoadJsonFileOptimizedAsync'">
+            <startOffsets>
+              <option value="2932" />
+            </startOffsets>
+            <endOffsets>
+              <option value="2974" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/JsonStatsCollector/Core/JsonProcessor.cs</url>
+          <line>88</line>
+          <properties documentPath="C:\Users\visto\RiderProjects\JsonStatsCollector\JsonStatsCollector\Core\JsonProcessor.cs" containingFunctionPresentation="Method 'LoadJsonFileOptimizedAsync'">
+            <startOffsets>
+              <option value="3154" />
+            </startOffsets>
+            <endOffsets>
+              <option value="3184" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/JsonStatsCollector/Core/JsonProcessor.cs</url>
+          <line>111</line>
+          <properties documentPath="C:\Users\visto\RiderProjects\JsonStatsCollector\JsonStatsCollector\Core\JsonProcessor.cs" containingFunctionPresentation="Method 'LoadJsonFileOptimizedAsync'">
+            <startOffsets>
+              <option value="3760" />
+            </startOffsets>
+            <endOffsets>
+              <option value="3797" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="6" />
+        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>

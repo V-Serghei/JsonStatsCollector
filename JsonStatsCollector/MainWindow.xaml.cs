@@ -10,14 +10,14 @@ namespace JsonStatsCollector
 {
     public partial class MainWindow : Window
     {
-        private List<string> _names = new List<string>();
-        private Dictionary<string, int>  _wordFrequency = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
-        private Dictionary<string, int>  _wordFrequency1 = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+        #region initialization variables
 
+        private List<string> _names = new List<string>();
+        private Dictionary<string, int>  WordFrequency = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+        private Dictionary<string, int>  WordFrequency1 = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
         private List<ChartData> StatisticsMessagesCount { get; set; } = new List<ChartData>();
         private List<ChartData> StatisticsWordsCount { get; set; } = new List<ChartData>();
         private List<ChartData> StatisticsLettersCount { get; set; } = new List<ChartData>();
-        
         public List<ChartData> Top10Stats { get; set; } = new();
         public SeriesCollection  StatisticsMessages { get; set; }
         public SeriesCollection  StatisticsWords { get; set; }
@@ -25,7 +25,9 @@ namespace JsonStatsCollector
         private string _jsonFilePath = string.Empty;
         private JsonProcessor _jsonProcessor = new JsonProcessor();
 
-        
+        #endregion
+
+        #region constructor
 
         public MainWindow()
         {
@@ -37,6 +39,15 @@ namespace JsonStatsCollector
             StatisticsLetters = new SeriesCollection();
         }
 
+        #endregion
+
+        #region button handlers
+        
+        /// <summary>
+        /// open file dialog for selecting a JSON file
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BrowseButton_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog
@@ -51,9 +62,15 @@ namespace JsonStatsCollector
                 
             }
         }
-
+        /// <summary>
+        /// edit the names of the senders
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void AddNameButton_Click(object sender, RoutedEventArgs e)
         {
+            //TODO: add option to remove names
+            //TODO: add option to edit names
             TextBox newNameTextBox = new TextBox
             {
                 Style = (Style)FindResource("DarkTextBoxStyle"),
@@ -71,19 +88,29 @@ namespace JsonStatsCollector
             NamesPanel.Children.Add(newNameTextBox);
         }
 
-        private void AnalyzeButton_Click(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// analyze the JSON file and display statistics
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private async void AnalyzeButton_Click(object sender, RoutedEventArgs e)
         {
+            #region cleaning up previous data
+
             StatisticsWordsCount.Clear();
             StatisticsWords.Clear();
             StatisticsLettersCount.Clear();
             StatisticsLetters.Clear();
             StatisticsMessagesCount.Clear();
             StatisticsMessages.Clear();
-            _wordFrequency1.Clear();
-            _wordFrequency.Clear();
-            
-            
-            var listOfMessage = _jsonProcessor.LoadJsonFile(_jsonFilePath);
+            WordFrequency1.Clear();
+            WordFrequency.Clear();
+
+            #endregion
+
+            #region loading JSON file
+
+            var listOfMessage = await _jsonProcessor.LoadJsonFileOptimizedAsync(_jsonFilePath, _names.Count > 0 ? _names[0] : null);
             if (listOfMessage.Count == 0)
             {
                 MessageBox.Show("No messages found in the JSON file.", "Error", MessageBoxButton.OK,
@@ -91,8 +118,10 @@ namespace JsonStatsCollector
                 return;
             }
 
+            #endregion
+            
+            #region the first method
             var stopwatch1 = Stopwatch.StartNew();
-
             var groupedMessages = listOfMessage
                 .GroupBy(m => m.From)
                 .ToList();
@@ -115,7 +144,7 @@ namespace JsonStatsCollector
                 Select(g => new ChartData(g.Key, g.Count()))
                 .ToList();
 
-            _wordFrequency1 = groupedMessages
+            WordFrequency1 = groupedMessages
                 .SelectMany(group => group)
                 .SelectMany(message => message.Text.
                     Split(new[] { ' ', '\t', '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries))
@@ -126,7 +155,11 @@ namespace JsonStatsCollector
 
             stopwatch1.Stop();
             Console.WriteLine($"Время обработки способ1: {stopwatch1.ElapsedMilliseconds} мс");
-            
+
+            #endregion
+
+            #region the second method
+
             var stopwatch = Stopwatch.StartNew();
 
             var aggregatedStats = listOfMessage
@@ -147,8 +180,8 @@ namespace JsonStatsCollector
 
                         foreach (var word in words)
                         {
-                            _wordFrequency.TryGetValue(word, out int currentCount);
-                            _wordFrequency[word] = currentCount + 1;
+                            WordFrequency.TryGetValue(word, out int currentCount);
+                            WordFrequency[word] = currentCount + 1;
                         }
                     }
 
@@ -162,7 +195,7 @@ namespace JsonStatsCollector
                 })
                 .ToList();
 
-            var top10Words = _wordFrequency
+            var top10Words = WordFrequency
                 .OrderByDescending(kvp => kvp.Value)
                 .Take(10)
                 .ToDictionary(kvp => kvp.Key, kvp => kvp.Value).ToList();
@@ -181,8 +214,10 @@ namespace JsonStatsCollector
                 .ToList();
             stopwatch.Stop();
             Console.WriteLine($"Время обработки2: {stopwatch.ElapsedMilliseconds} мс");
-            
 
+            #endregion
+            
+            #region statistics loading
 
             StatisticsMessages.AddRange(
                 StatisticsMessagesCount
@@ -194,11 +229,11 @@ namespace JsonStatsCollector
                     })
             );
             
-            Top10Stats = _wordFrequency
+            Top10Stats = WordFrequency
                 .Where(kvp => kvp.Key.Length >= 5 && kvp.Key.All(char.IsLetter))
                 .Select(kvp => new ChartData(kvp.Key, kvp.Value))
                 .OrderByDescending(data => data.Value)
-                .Take(50)
+                .Take(10)
                 .ToList();
             Top10ListView.ItemsSource = Top10Stats;
 
@@ -222,7 +257,13 @@ namespace JsonStatsCollector
                         DataLabels = true
                     })
             );
+
+            #endregion
+            
             
         }
+
+        #endregion
+       
     }
 }

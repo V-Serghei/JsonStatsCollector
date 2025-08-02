@@ -138,7 +138,7 @@
                 <StackPanel Margin="15">
                     <TextBlock Text="Панель управления" FontSize="18" FontWeight="Bold" Margin="0,0,0,15"/>
                     <TextBox x:Name="TitleTextBox" Style="{StaticResource DarkTextBoxStyle}" Text="Analysis Title"/>
-                    <TextBox x:Name="DescriptionTextBox" Style="{StaticResource DarkTextBoxStyle}" Text="Description" Height="60" AcceptsReturn="True" TextWrapping="Wrap"/>
+                    <TextBox x:Name="DescriptionTextBox" Style="{StaticResource DarkTextBoxStyle}" Text="The first name should also be the name of the person you want to analyze the chat with." Height="60" AcceptsReturn="True" TextWrapping="Wrap"/>
                     
                     <Grid Margin="0,5,0,0">
                         <Grid.ColumnDefinitions>
