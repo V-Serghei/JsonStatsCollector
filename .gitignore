@@ -1,5 +1,35 @@
-bin/
-obj/
-/packages/
+# Build results
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+arm64/
+
+# NuGet
+packages/
+*.nupkg
+project.assets.json
+project.nuget.cache
+
+# Visual Studio / MSBuild
+.vs/
+*.user
+*.rsuser
+*.suo
+*.userosscache
+*.sln.docstates
+TestResults/
+*.trx
+
+# JetBrains Rider / ReSharper
+.idea/
+*.DotSettings.user
 riderModule.iml
-/_ReSharper.Caches/
+_ReSharper.Caches/
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+*.swp
