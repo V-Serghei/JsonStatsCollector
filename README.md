@@ -1,83 +1,61 @@
 # JsonStatsCollector
 
-WPF-приложение для анализа JSON-экспорта Telegram. Приложение загружает файл экспорта, фильтрует сообщения по выбранному чату/именам и показывает статистику по количеству сообщений, слов, букв и топ-10 часто встречающихся слов.
+JsonStatsCollector is a Windows WPF application for analyzing Telegram JSON exports. It reads an exported chat file, filters messages by chat or participant names, and displays message, word, letter, and top-word statistics.
 
-## Что внутри
+## Features
 
-- `JsonStatsCollector/MainWindow.xaml` - интерфейс приложения.
-- `JsonStatsCollector/MainWindow.xaml.cs` - обработчики выбора файла, добавления имен и запуска анализа.
-- `JsonStatsCollector/Core/JsonProcessor.cs` - загрузка и разбор JSON-экспорта.
-- `JsonStatsCollector/Entity` - модели для десериализации Telegram JSON.
+- Loads Telegram JSON export files.
+- Filters statistics by selected chat or participant names.
+- Shows message count, word count, and letter count charts.
+- Displays the top 10 most frequent words.
+- Uses a dark WPF interface with LiveCharts visualizations.
 
-## Требования
+## Requirements
 
 - Windows.
-- .NET SDK `10.0.301` или новее в линейке .NET 10.
+- .NET SDK `10.0.301` or newer within the .NET 10 line.
 - .NET Windows Desktop Runtime 10.
 
-Версия SDK закреплена в `global.json` с `rollForward: latestFeature`, поэтому более свежий feature-band .NET 10 тоже подойдет.
+The SDK version is pinned in `global.json` with `rollForward: latestFeature`, so newer .NET 10 feature bands are supported.
 
-## Зависимости
+## Dependencies
 
 - `LiveCharts` `0.9.7`
 - `LiveCharts.Wpf` `0.9.7`
 
-На момент проверки `dotnet list package --outdated` не показывает более новых версий для этих пакетов в текущей ветке. При этом NuGet может предупреждать, что `LiveCharts 0.9.7` восстановлен как .NET Framework-пакет. Это существующий нюанс библиотеки; если понадобится полностью убрать предупреждение совместимости, лучше мигрировать графики на современную ветку `LiveChartsCore`, но это уже отдельное изменение API.
+`LiveCharts 0.9.7` is the latest version available for the package line currently used by this project. NuGet may show compatibility warnings because the package targets .NET Framework assets. The application still builds on .NET 10, but migrating charts to `LiveChartsCore` would be the cleaner long-term option if full modern .NET compatibility is required.
 
-## Запуск
+## Project Structure
 
-Восстановить зависимости:
+- `JsonStatsCollector/MainWindow.xaml` - main application UI.
+- `JsonStatsCollector/MainWindow.xaml.cs` - UI event handlers and statistics preparation.
+- `JsonStatsCollector/Core/JsonProcessor.cs` - Telegram JSON loading and parsing.
+- `JsonStatsCollector/Entity` - JSON model classes.
+
+## Run Locally
+
+Restore dependencies:
 
 ```powershell
 dotnet restore
 ```
 
-Собрать проект:
+Build the project:
 
 ```powershell
 dotnet build
 ```
 
-Запустить приложение:
+Run the application:
 
 ```powershell
 dotnet run --project .\JsonStatsCollector\JsonStatsCollector.csproj
 ```
 
-## Как пользоваться
+## Usage
 
-1. Нажать `Обзор` и выбрать JSON-файл экспорта Telegram.
-2. Добавить имя чата/участника через `Добавить имя`.
-3. Нажать `Анализировать`.
+1. Click the browse button and select a Telegram JSON export file.
+2. Add a chat or participant name in the control panel.
+3. Run the analysis.
 
-Первое добавленное имя используется как фильтр для поиска нужного чата. Статистика на графиках выводится только для добавленных имен.
-
-## Git hygiene
-
-В репозиторий не должны попадать:
-
-- `bin/`, `obj/`, `Debug/`, `Release/`;
-- `.vs/`, `.idea/`, `_ReSharper.Caches/`;
-- локальные пользовательские настройки `*.user`, `*.DotSettings.user`;
-- временные файлы редакторов и ОС.
-
-`.gitignore` уже настроен под эти правила. Если эти файлы уже были добавлены в git раньше, их нужно один раз убрать из индекса командой `git rm --cached`, не удаляя локально с диска.
-
-Команды для очистки уже отслеживаемого IDE/cache-мусора:
-
-```powershell
-git rm -r --cached .idea
-git rm --cached JsonStatsCollector.sln.DotSettings.user
-git rm --cached JsonStatsCollector\JsonStatsCollector.csproj.DotSettings.user
-git status
-```
-
-После этого проверьте статус, добавьте нужные изменения и сделайте коммит уже вручную:
-
-```powershell
-git add .gitignore README.md global.json JsonStatsCollector\JsonStatsCollector.csproj
-git status
-git commit -m "chore: update project baseline and git hygiene"
-```
-
-`git rm --cached` уже подготовит удаления из индекса, чтобы в pull request эти файлы исчезли из последнего состояния репозитория, но остались у вас локально.
+The first added name is used to find the target chat. Charts are generated for the names added in the control panel.
